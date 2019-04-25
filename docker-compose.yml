@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  webserver:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - "./backend/webserver:/workspace/webserver"
+      - "./backend/database:/workspace/database"
+    command: gunicorn -c webserver/gunicorn_config.py webserver:app
