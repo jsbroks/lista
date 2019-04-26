@@ -19,6 +19,9 @@ socketio = SocketIO()
 from flask_cors import CORS
 cors = CORS()
 
+from flask_migrate import Migrate
+migrate = Migrate(db=db)
+
 
 def init_app(app):
     
@@ -27,6 +30,7 @@ def init_app(app):
         db,
         login_manager,
         socketio,
+        migrate
         # marshmallow
     ]
 
