@@ -34,6 +34,11 @@ class User(db.Model, Timestamp, UserMixin):
     is_online = db.Column(db.Boolean(), default=False, nullable=False)
     is_admin = db.Column(db.Boolean(), default=False, nullable=False)
 
+    settings = db.relationship('UserSettings', lazy=True, uselist=False)
+
+    created_tasks = db.relationship('Task', back_populates='owner', lazy='dynamic')
+    assigned_task = db.relationship('Task', back_populates='assignee', lazy='dynamic')
+
     projects = db.relationship(
         'Project',
         secondary=users_projects,
@@ -52,6 +57,17 @@ class User(db.Model, Timestamp, UserMixin):
     def tasks(self):
         return Task.query.join(Task.project)\
                 .filter(Project.users.any(User.id == self.id))
+
+
+class UserSettings(db.Model):
+    """
+    User Setting database model
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    primary_color = db.Column(db.String(10))
+    secondary_color = db.Column(db.String(10))
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 @login_manager.user_loader

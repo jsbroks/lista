@@ -1,7 +1,7 @@
 FROM python:3.6
 
 COPY ./backend/ /workspace/
-# COPY ./.git /workspace/.git
+COPY ./.git /workspace/.git
 
 WORKDIR /workspace/
 

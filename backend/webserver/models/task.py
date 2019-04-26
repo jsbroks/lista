@@ -3,6 +3,9 @@ from .helper_tables import users_projects
 from sqlalchemy_utils import Timestamp
 
 class Task(db.Model, Timestamp):
+    """
+    Task database model
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
@@ -13,12 +16,17 @@ class Task(db.Model, Timestamp):
     completed = db.Column(db.DateTime)
 
     # User references
-    # owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # owner = db.relationship('User', lazy=True)
-    # assigned_to_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # assigned_to = db.relationship('User', lazy=True)
-    # assigned_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # assigned_by = db.relationship('User', lazy=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    owner = db.relationship('User', lazy=True, back_populates='created_tasks')
 
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    assignee = db.relationship('User', lazy=True, back_populates='assigned_tasks',
+                               foreign_keys=[assignee_id])
+
+    assigner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    assigner = db.relationship('User', lazy=True, foreign_keys=[assigner_id])
+
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     project = db.relationship('Project', back_populates='tasks', lazy=True)
+
+    comments = db.relationship('Comment', back_populates='task', lazy='dynamic')
