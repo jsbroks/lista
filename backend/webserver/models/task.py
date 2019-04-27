@@ -2,6 +2,7 @@ from webserver.extensions import db
 from .helper_tables import users_projects
 from sqlalchemy_utils import Timestamp
 
+
 class Task(db.Model, Timestamp):
     """
     Task database model
@@ -17,16 +18,14 @@ class Task(db.Model, Timestamp):
 
     # User references
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    owner = db.relationship('User', lazy=True, back_populates='created_tasks')
-
     assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    assignee = db.relationship('User', lazy=True, back_populates='assigned_tasks',
-                               foreign_keys=[assignee_id])
-
     assigner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey(
+        'project.id'), nullable=False)
+
+    owner = db.relationship('User', lazy=True, foreign_keys=[owner_id])
+    assignee = db.relationship('User', lazy=True, foreign_keys=[assignee_id])
     assigner = db.relationship('User', lazy=True, foreign_keys=[assigner_id])
-
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     project = db.relationship('Project', back_populates='tasks', lazy=True)
-
-    comments = db.relationship('Comment', back_populates='task', lazy='dynamic')
+    comments = db.relationship(
+        'Comment', back_populates='task', lazy='dynamic')

@@ -1,10 +1,5 @@
 from flask_restplus import Resource, marshal, abort
-from flask_login import (
-    login_user,
-    login_required,
-    logout_user,
-    current_user
-)
+from flask_login import login_required, current_user
 
 from webserver.api import commit_or_abort, profile
 from webserver.models import db, Project
@@ -20,7 +15,7 @@ from .namespace import (
 
 @api.route('/')
 class Projects(Resource):
-    
+
     @login_required
     @api.marshal_with(project_list)
     def get(self):
@@ -49,17 +44,20 @@ class ProjectId(Resource):
     @api.marshal_with(project)
     def get(self, project_id):
         """ Gets projects """
-        return False
-    
+        return current_user.projects.get_or_404(project_id)
+
     @login_required
     @api.marshal_with(project)
     def put(self, project_id):
         """ Updates projects """
         return False
 
-
     @login_required
     @api.marshal_with(project)
     def delete(self, project_id):
         """ Deletes projects """
-        return False
+        with commit_or_abort(error_message='Operation failed. Could not delete project'):
+            project_model = current_user.get_or_404(project_id)
+            project_model.delete()
+
+        return project_model
