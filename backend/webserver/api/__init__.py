@@ -22,19 +22,20 @@ def get_namespaces(path):
     directories = sorted(os.listdir(path))
     namespaces = []
     modules = []
-    
+
     for namespace in directories:
         if '__pycache__' in namespace:
             continue
-        
+
         namespace_path = os.path.join(path, namespace)
         if os.path.isdir(namespace_path):
             import_string = namespace_path.replace('/', '.')[2:]
             module = importlib.import_module(import_string)
             namespaces.append(module.api)
-            modules.append(namespace)
-    
-    logger.info(f'API: {path} loaded modules {modules}')
+            modules.append(f'/{namespace}')
+
+    logger.info(
+        f"API {path.split('/')[-1]} loaded modules {', '.join(modules)}")
     return namespaces
 
 

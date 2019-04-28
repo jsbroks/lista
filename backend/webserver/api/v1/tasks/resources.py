@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from webserver.api import commit_or_abort
 from webserver.models import db, Task, Project, User
-from webserver import logger
+from webserver.config import logger
 
 from .namespace import (
     api,
@@ -20,18 +20,19 @@ class Projects(Resource):
     def get(self):
         """ Returns a list of users tasks """
         return current_user.tasks.paginate(1, per_page=100, max_per_page=500)
-    
+
     @login_required
     @api.expect(task_base)
     @api.marshal_with(task)
     def post(self):
         """ Creates a new task """
         args = api.payload
-
+        logger.debug('test1')
         with commit_or_abort(error_message='Operation failed. Could not create task.'):
             task_model = Task(**args)
             db.session.add(task_model)
-
+        logger.debug('test2')
+        task_model.emit_create()
         return task_model
 
 
@@ -42,7 +43,7 @@ class TaskId(Resource):
     def get(self, task_id):
         """ Gets task """
         return False
-    
+
     @login_required
     @api.marshal_with(task)
     def put(self, project_id):

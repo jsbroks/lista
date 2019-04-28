@@ -1,9 +1,8 @@
 from flask_restplus import Resource, marshal, abort
 from flask_login import (
-    login_user,
     login_required,
-    logout_user,
-    current_user
+    current_user,
+    login_user
 )
 
 from webserver.api import commit_or_abort, admin_login_required
@@ -27,24 +26,17 @@ class Login(Resource):
     def post(self):
 
         args = api.payload
-        username = args.get('username')
-        password = args.get('password')
-        remember = args.get('remember')
-
-        found = User.find_with_password(username, password)
+        found = User.login(**args)
         if not found:
-            logger.warning(f'Failed login attempt with username {username}')
-            abort(code=400, message="Invalid username or password")
+            abort(code=400, message='Invalid username or password')
 
-        login_user(found, remember=remember)
-        logger.info(f'{found.username} successfully logged in')
         return found
 
 
 @api.route('/logout')
 class Logout(Resource):
     def get(self):
-        logout_user()
+        User.logout()
         return {'success': True}
 
 
@@ -110,7 +102,7 @@ class UsersMe(Resource):
     def get(self):
         """ Returns current user """
         return User.query.get(current_user.id)
-    
+
     @login_required
     @api.marshal_with(user)
     def put(self):

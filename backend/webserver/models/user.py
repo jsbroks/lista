@@ -1,20 +1,28 @@
 from webserver.extensions import db, login_manager
-from .helper_tables import users_projects
+from webserver.config import logger
 
 from sqlalchemy import func
 from sqlalchemy_utils import Timestamp
 from sqlalchemy_utils.types.password import PasswordType
 
-from flask_login import UserMixin
-from .task import Task
+from flask_login import (
+    UserMixin,
+    AnonymousUserMixin,
+    login_user,
+    current_user,
+    logout_user
+)
+
+from .helper_tables import users_projects
 from .project import Project
+from .task import Task
 
 MAX_USERNAME_LENGTH = 80
 
 
 class User(db.Model, Timestamp, UserMixin):
     """
-    User database model
+    User database model with user authentication mixin
     """
 
     id = db.Column(db.Integer, primary_key=True)
@@ -37,14 +45,39 @@ class User(db.Model, Timestamp, UserMixin):
         'Comment', lazy='dynamic', back_populates='user')
 
     @classmethod
+    def login(cls, username, password, remember=True):
+        """
+        Attempts to login in a user with provided credentials
+        """
+        found = cls.find_with_password(username, password)
+        if not found:
+            logger.warning(f'Failed login attempt with username {username}')
+            return None
+
+        login_user(found, remember=remember)
+        current_user.join_project_rooms()
+        logger.info(f'{found.username} successfully logged in')
+        return found
+
+    @classmethod
     def find_with_password(cls, username, password):
         user = cls.query\
             .filter(func.lower(User.username) == func.lower(username))\
             .first()
-
         if not user:
             return None
         return user if user.password == password else None
+
+    @staticmethod
+    def logout():
+        """
+        Logout current user
+        """
+        if current_user.is_authenticated:
+            current_user.leave_project_rooms()
+            logout_user()
+            logger.info(f'{current_user.username} has logout')
+        return True
 
     @property
     def tasks(self):
@@ -59,6 +92,14 @@ class User(db.Model, Timestamp, UserMixin):
     def assigned_tasks(self):
         return Task.query.filter_by(assignee_id=self.id)
 
+    def join_project_rooms(self):
+        for project in self.projects:
+            project.join_room()
+
+    def leave_project_rooms(self):
+        for project in self.projects:
+            project.leave_room()
+
 
 class UserSettings(db.Model):
     """
@@ -69,6 +110,15 @@ class UserSettings(db.Model):
     secondary_color = db.Column(db.String(10))
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+class AnonymousUser(AnonymousUserMixin):
+    @property
+    def username(self):
+        return 'anonymous user'
+
+
+login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader

@@ -1,6 +1,10 @@
-from webserver.extensions import db
-from .helper_tables import users_projects
+from webserver.extensions import db, socketio, ma
+from webserver.config import logger
+
+from flask_restplus import marshal
 from sqlalchemy_utils import Timestamp
+
+from .helper_tables import users_projects
 
 
 class Task(db.Model, Timestamp):
@@ -29,3 +33,17 @@ class Task(db.Model, Timestamp):
     project = db.relationship('Project', back_populates='tasks', lazy=True)
     comments = db.relationship(
         'Comment', back_populates='task', lazy='dynamic')
+
+    def emit_create(self):
+        room = self.project.room_id
+        logger.debug(f'Task creatation emited to room {room}')
+
+        from webserver.schema import TaskSchema
+        socketio.emit('task_create', TaskSchema().dump(self), room=room)
+
+    def emit_delete(self):
+        room = self.project.room_id
+        logger.debug(f'Task deletion emited to room {room}')
+
+        from webserver.schema import TaskSchema
+        socketio.emit('task_delete', TaskSchema().dump(self), room=room)

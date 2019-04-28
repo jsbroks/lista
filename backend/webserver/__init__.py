@@ -1,12 +1,11 @@
 import eventlet
-eventlet.monkey_patch()
-
 from flask import Flask
-
 from werkzeug.contrib.fixers import ProxyFix
-
 from webserver.config import Config, logger
 from webserver.api import api_blueprints
+
+
+eventlet.monkey_patch()
 
 
 def create_app():
@@ -25,7 +24,13 @@ def create_app():
 
     from . import models
     models.init_app()
-    
+
+    from . import sockets
+    sockets.init_app()
+
+    from . import schema
+    schema.init_app()
+
     extensions.db.create_all(app=flask)
 
     for blueprint in api_blueprints():
