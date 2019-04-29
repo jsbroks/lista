@@ -13,8 +13,9 @@ task_base = api.model('TaskBase', {
 
 task = api.inherit('Task', task_base, {
     'id': fields.Integer,
-    'created': fields.DateTime(),
-    'updated': fields.DateTime(),
+    'created': fields.DateTime,
+    'updated': fields.DateTime,
+    'owner_id': fields.Integer
 })
 
 task_list = api.model('UserList', {

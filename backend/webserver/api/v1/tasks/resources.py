@@ -27,11 +27,11 @@ class Projects(Resource):
     def post(self):
         """ Creates a new task """
         args = api.payload
-        logger.debug('test1')
+
         with commit_or_abort(error_message='Operation failed. Could not create task.'):
             task_model = Task(**args)
             db.session.add(task_model)
-        logger.debug('test2')
+
         task_model.emit_create()
         return task_model
 

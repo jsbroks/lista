@@ -35,3 +35,17 @@ class Project(db.Model, Timestamp):
         leave_room(self.room_id)
         logger.debug(
             f'{current_user.username} has left room {self.name} ({self.id})')
+
+    def emit_create(self):
+        room = self.room_id
+        logger.debug(f'Project creatation emited {self.name}')
+
+        # from webserver.schema import ProjectSchema
+        # socketio.emit('project_created', TaskSchema().dump(self), room=room)
+
+    def emit_delete(self):
+        room = self.room_id
+        logger.debug(f'Project deletion emited {self.name} ')
+
+        # from webserver.schema import TaskSchema
+        # socketio.emit('project_delete', TaskSchema().dump(self), room=room)

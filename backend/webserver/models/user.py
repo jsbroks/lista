@@ -55,7 +55,6 @@ class User(db.Model, Timestamp, UserMixin):
             return None
 
         login_user(found, remember=remember)
-        current_user.join_project_rooms()
         logger.info(f'{found.username} successfully logged in')
         return found
 
@@ -74,7 +73,6 @@ class User(db.Model, Timestamp, UserMixin):
         Logout current user
         """
         if current_user.is_authenticated:
-            current_user.leave_project_rooms()
             logout_user()
             logger.info(f'{current_user.username} has logout')
         return True
