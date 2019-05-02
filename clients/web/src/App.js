@@ -1,106 +1,79 @@
 import React, { Component } from "react";
 
-import {
-  Button,
-  Container,
-  Grid,
-  Header,
-  Icon,
-  Menu,
-  Label,
-  Accordion,
-  List,
-  Progress
-} from "semantic-ui-react";
+import { Container, Grid, List } from "semantic-ui-react";
+
+import AppBar from "./components/AppBar";
+import Task from "./components/Task";
+import ViewMenu from "./components/menus/ViewMenus";
+import DropdownMenu from "./components/menus/DropdownMenus";
+
+const tasks = [
+  {
+    id: 1,
+    name: "task1",
+    project: "project1",
+    children: [
+      {
+        id: 2,
+        name: "subtask1",
+        project: "project2",
+        progress: 20
+      },
+      {
+        id: 3,
+        name: "subtask2",
+        project: "project3",
+        progress: 100
+      }
+    ]
+  },
+  {
+    id: 5,
+    name: "task2",
+    project: "project1",
+    children: [
+      {
+        id: 6,
+        name: "subtask1",
+        project: "project2",
+        progress: 90,
+        children: [
+          {
+            id: 7,
+            name: "subsubtask1",
+            project: "project3",
+            progress: 20
+          }
+        ]
+      }
+    ]
+  }
+];
+
+const projects = [
+  { id: 1, color: "red", name: "project1 test" },
+  { id: 2, color: "green", name: "project2 test" },
+  { id: 3, color: "black", name: "project3 test" }
+];
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Menu icon secondary>
-          <Container>
-            <Menu.Item header>
-              <Header>Lista</Header>
-            </Menu.Item>
-
-            <Menu.Item name="icon menu" position="right">
-              <Button circular icon style={{ marginRight: 5 }}>
-                <Icon name="add" />
-              </Button>
-              <Button circular icon style={{ marginRight: 5 }}>
-                <Icon name="tasks" />
-                <Label color="red" circular floating size="tiny">
-                  22
-                </Label>
-              </Button>
-            </Menu.Item>
-          </Container>
-        </Menu>
-
+        <AppBar />
         <Container>
           <Grid columns={2} divided>
             <Grid.Row>
-              <Grid.Column width={4} fluid>
-                <Menu vertical secondary fluid>
-                  <Menu.Item>
-                    <Icon name="inbox" />
-                    Inbox
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Icon name="sun" />
-                    <Label size="tiny">22</Label>
-                    Today
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Icon name="calendar" />
-                    Week
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Icon name="calendar alternate" />
-                    Calandar
-                  </Menu.Item>
-                </Menu>
-
-                <Accordion>
-                  <Accordion.Title>
-                    <Icon name="dropdown" />
-                    Projects
-                  </Accordion.Title>
-                  <Accordion.Title>
-                    <Icon name="dropdown" />
-                    Labels
-                  </Accordion.Title>
-                  <Accordion.Title>
-                    <Icon name="dropdown" />
-                    Filters
-                  </Accordion.Title>
-                </Accordion>
+              <Grid.Column width={4}>
+                <ViewMenu />
+                <DropdownMenu projects={projects} />
               </Grid.Column>
 
               <Grid.Column width={12}>
-                <List selection>
-                  <List.Item>
-                    <List.Content floated="right">
-                      <List.Icon name="ellipsis vertical" position="right" />
-                    </List.Content>
-                    <List.Content floated="right">
-                      <Label size="mini" circular>
-                        <Icon name="circle" color="red" /> Indox
-                      </Label>
-                    </List.Content>
-
-                    <List.Icon
-                      name="sort"
-                      size="small"
-                      style={{ paddingRight: 10 }}
-                      verticalAlign="middle"
-                    />
-                    <List.Icon name="circle outline" verticalAlign="middle" />
-                    <List.Content>
-                      <List.Header>Some Random Task</List.Header>
-                    </List.Content>
-                  </List.Item>
-                  <Progress percent={100} attached="bottom" />
+                <List>
+                  {tasks.map(t => (
+                    <Task {...t} />
+                  ))}
                 </List>
               </Grid.Column>
             </Grid.Row>
