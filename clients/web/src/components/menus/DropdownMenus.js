@@ -10,6 +10,34 @@ const styles = {
   }
 };
 
+const ProjectItem = props => {
+  return (
+    <MenuItem
+      {...props}
+      icon={{
+        name: "circle",
+        color: props.color,
+        style: { padding: 10 },
+        size: "mini"
+      }}
+    />
+  );
+};
+
+const LabelItem = props => {
+  return (
+    <MenuItem
+      {...props}
+      icon={{
+        size: "small",
+        name: "tag",
+        style: { padding: 6 },
+        color: "gray"
+      }}
+    />
+  );
+};
+
 class DropdownMenu extends Component {
   constructor(props) {
     super(props);
@@ -44,15 +72,7 @@ class DropdownMenu extends Component {
         <Accordion.Content active={showProjects} style={styles.removePadding}>
           <List selection>
             {projects.map(p => (
-              <MenuItem
-                key={p.id}
-                {...p}
-                icon={{
-                  name: "circle",
-                  color: p.color,
-                  style: { padding: 10 }
-                }}
-              />
+              <ProjectItem key={p.id} {...p} />
             ))}
             <List.Item>
               <Button basic fluid size="mini" style={{ padding: 4 }}>
@@ -69,15 +89,7 @@ class DropdownMenu extends Component {
         <Accordion.Content active={showLabels} style={styles.removePadding}>
           <List selection>
             {labels.map(l => (
-              <MenuItem
-                key={l.id}
-                {...l}
-                icon={{
-                  name: "tag",
-                  size: "mini",
-                  style: { padding: 10 }
-                }}
-              />
+              <LabelItem key={l.id} {...l} />
             ))}
             <List.Item>
               <Button basic fluid size="mini" style={{ padding: 4 }}>

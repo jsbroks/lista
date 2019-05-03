@@ -6,39 +6,45 @@ import {
   Header,
   Icon,
   Menu,
-  Label
+  Label,
+  Sticky
 } from "semantic-ui-react";
 
 const styles = {
   button: {
     marginRight: 5
+  },
+  menu: {
+    background: "white"
   }
 };
 class AppBar extends Component {
   render() {
     const { notifications } = this.props;
     return (
-      <Menu icon secondary>
-        <Container>
-          <Menu.Item header>
-            <Header>Lista</Header>
-          </Menu.Item>
+      <Sticky>
+        <Menu icon secondary attached="top" style={styles.menu}>
+          <Container>
+            <Menu.Item header>
+              <Header as="h2">Lista</Header>
+            </Menu.Item>
 
-          <Menu.Item name="icon menu" position="right">
-            <Button circular icon style={styles.button}>
-              <Icon name="add" />
-            </Button>
-            <Button circular icon style={styles.button}>
-              <Icon name="tasks" />
-              {notifications ? (
-                <Label color="red" circular floating size="tiny">
-                  {notifications}
-                </Label>
-              ) : null}
-            </Button>
-          </Menu.Item>
-        </Container>
-      </Menu>
+            <Menu.Item name="icon menu" position="right">
+              <Button circular icon style={styles.button}>
+                <Icon name="add" />
+              </Button>
+              <Button circular icon style={styles.button}>
+                <Icon name="tasks" />
+                {notifications ? (
+                  <Label color="red" circular floating size="tiny">
+                    {notifications}
+                  </Label>
+                ) : null}
+              </Button>
+            </Menu.Item>
+          </Container>
+        </Menu>
+      </Sticky>
     );
   }
 }

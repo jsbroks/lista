@@ -60,7 +60,24 @@ const labels = [
   { id: 1, name: "Label 1" },
   { id: 2, name: "Label 2" },
   { id: 3, name: "Label 3" },
-  { id: 4, name: "Label 4" }
+  { id: 4, name: "Label 4" },
+  { id: 5, name: "Label 4" },
+  { id: 6, name: "Label 4" },
+  { id: 7, name: "Label 4" },
+  { id: 8, name: "Label 4" },
+  { id: 9, name: "Label 4" },
+  { id: 10, name: "Label 4" },
+  { id: 11, name: "Label 4" },
+  { id: 12, name: "Label 4" },
+  { id: 13, name: "Label 4" },
+  { id: 14, name: "Label 4" },
+  { id: 15, name: "Label 4" },
+  { id: 16, name: "Label 4" },
+  { id: 17, name: "Label 4" },
+  { id: 18, name: "Label 4" },
+  { id: 19, name: "Label 4" },
+  { id: 20, name: "Label 4" },
+  { id: 21, name: "Label 4" }
 ];
 
 class App extends Component {
@@ -68,7 +85,7 @@ class App extends Component {
     return (
       <div>
         <AppBar />
-        <Container>
+        <Container style={{ paddingTop: 20 }}>
           <Grid columns={2}>
             <Grid.Row>
               <Grid.Column width={4}>
