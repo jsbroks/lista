@@ -24,17 +24,12 @@ const styles = {
 
 class ProjectListItem extends Component {
   render() {
-    const { name, color } = this.props;
+    const { name, icon } = this.props;
 
     return (
       <List.Item style={styles.removeSpacing}>
         <Input type="text" fluid>
-          <Icon
-            name="circle"
-            size="mini"
-            color={color}
-            style={styles.circleIcon}
-          />
+          <Icon {...icon} />
           <input style={styles.input} value={name} />
         </Input>
       </List.Item>
@@ -44,7 +39,8 @@ class ProjectListItem extends Component {
 
 ProjectListItem.protoTypes = {
   id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.object
 };
 
 export default ProjectListItem;

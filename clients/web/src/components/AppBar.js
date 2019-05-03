@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   Button,
   Container,
@@ -8,8 +9,14 @@ import {
   Label
 } from "semantic-ui-react";
 
+const styles = {
+  button: {
+    marginRight: 5
+  }
+};
 class AppBar extends Component {
   render() {
+    const { notifications } = this.props;
     return (
       <Menu icon secondary>
         <Container>
@@ -18,14 +25,16 @@ class AppBar extends Component {
           </Menu.Item>
 
           <Menu.Item name="icon menu" position="right">
-            <Button circular icon style={{ marginRight: 5 }}>
+            <Button circular icon style={styles.button}>
               <Icon name="add" />
             </Button>
-            <Button circular icon style={{ marginRight: 5 }}>
+            <Button circular icon style={styles.button}>
               <Icon name="tasks" />
-              <Label color="red" circular floating size="tiny">
-                22
-              </Label>
+              {notifications ? (
+                <Label color="red" circular floating size="tiny">
+                  {notifications}
+                </Label>
+              ) : null}
             </Button>
           </Menu.Item>
         </Container>
@@ -33,5 +42,9 @@ class AppBar extends Component {
     );
   }
 }
+
+AppBar.protoTypes = {
+  notifications: PropTypes.number.isRequired
+};
 
 export default AppBar;

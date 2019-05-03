@@ -5,8 +5,8 @@ import { Menu, Icon, Label } from "semantic-ui-react";
 class ViewMenu extends Component {
   render() {
     return (
-      <Menu vertical secondary fluid>
-        <Menu.Item>
+      <Menu vertical secondary fluid pointing>
+        <Menu.Item active={true}>
           <Icon name="inbox" />
           Inbox
         </Menu.Item>

@@ -56,17 +56,24 @@ const projects = [
   { id: 3, color: "black", name: "project3 test" }
 ];
 
+const labels = [
+  { id: 1, name: "Label 1" },
+  { id: 2, name: "Label 2" },
+  { id: 3, name: "Label 3" },
+  { id: 4, name: "Label 4" }
+];
+
 class App extends Component {
   render() {
     return (
       <div>
         <AppBar />
         <Container>
-          <Grid columns={2} divided>
+          <Grid columns={2}>
             <Grid.Row>
               <Grid.Column width={4}>
                 <ViewMenu />
-                <DropdownMenu projects={projects} />
+                <DropdownMenu projects={projects} labels={labels} />
               </Grid.Column>
 
               <Grid.Column width={12}>
