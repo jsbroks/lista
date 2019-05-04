@@ -99,9 +99,8 @@ class Task extends Component {
               style={styles.taskInput}
               autoFocus
               onBlur={this.disableNameEditing}
-            >
-              {name}
-            </TextareaAutosize>
+              value={name}
+            />
           </List.Content>
         ) : (
           <List.Content>

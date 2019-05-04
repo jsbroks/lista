@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { Container, Grid, List } from "semantic-ui-react";
 
-import AppBar from "./components/AppBar";
+import AppBar, { APPBAR_HEIGHT } from "./components/AppBar";
 import Task from "./components/Task";
 import ViewMenu from "./components/menus/ViewMenus";
 import DropdownMenu from "./components/menus/DropdownMenus";
@@ -80,23 +80,45 @@ const labels = [
   { id: 21, name: "Label 4" }
 ];
 
+const filters = [
+  { id: 1, name: "Query 1", query: "" },
+  { id: 2, name: "Query 2", query: "" },
+  { id: 3, name: "Query 3", query: "" },
+  { id: 4, name: "Query 4", query: "" },
+  { id: 5, name: "Query 4", query: "" },
+  { id: 6, name: "Query 4", query: "" }
+];
+
+const styles = {
+  taskView: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
+    overflowY: "auto"
+  }
+};
+
 class App extends Component {
   render() {
     return (
       <div>
         <AppBar />
-        <Container style={{ paddingTop: 20 }}>
+        <Container>
           <Grid columns={2}>
-            <Grid.Row>
+            <Grid.Row style={{ padding: 0, marginTop: 14 }}>
               <Grid.Column width={4}>
                 <ViewMenu />
-                <DropdownMenu projects={projects} labels={labels} />
+                <DropdownMenu
+                  projects={projects}
+                  labels={labels}
+                  filters={filters}
+                />
               </Grid.Column>
 
               <Grid.Column width={12}>
-                <List>
+                <List style={styles.taskView}>
                   {tasks.map(t => (
-                    <Task {...t} />
+                    <Task key={t.id} {...t} />
                   ))}
                 </List>
               </Grid.Column>

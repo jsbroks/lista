@@ -3,25 +3,12 @@ import React, { Component } from "react";
 import { Accordion, Icon, List, Button } from "semantic-ui-react";
 
 import MenuItem from "./MenuItem";
+import ProjectItem from "./ProjectItem";
 
 const styles = {
   removePadding: {
     padding: 0
   }
-};
-
-const ProjectItem = props => {
-  return (
-    <MenuItem
-      {...props}
-      icon={{
-        name: "circle",
-        color: props.color,
-        style: { padding: 10 },
-        size: "mini"
-      }}
-    />
-  );
 };
 
 const LabelItem = props => {

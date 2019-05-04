@@ -6,45 +6,49 @@ import {
   Header,
   Icon,
   Menu,
-  Label,
-  Sticky
+  Label
 } from "semantic-ui-react";
+
+export const APPBAR_HEIGHT = 60;
 
 const styles = {
   button: {
     marginRight: 5
   },
   menu: {
-    background: "white"
+    background: "white",
+    height: APPBAR_HEIGHT
   }
 };
+
 class AppBar extends Component {
   render() {
     const { notifications } = this.props;
     return (
-      <Sticky>
-        <Menu icon secondary attached="top" style={styles.menu}>
-          <Container>
-            <Menu.Item header>
-              <Header as="h2">Lista</Header>
-            </Menu.Item>
+      <Menu icon secondary attached="top" style={styles.menu}>
+        <Container>
+          <Menu.Item header>
+            <Header as="h2">Lista</Header>
+          </Menu.Item>
 
-            <Menu.Item name="icon menu" position="right">
-              <Button circular icon style={styles.button}>
-                <Icon name="add" />
-              </Button>
-              <Button circular icon style={styles.button}>
-                <Icon name="tasks" />
-                {notifications ? (
-                  <Label color="red" circular floating size="tiny">
-                    {notifications}
-                  </Label>
-                ) : null}
-              </Button>
-            </Menu.Item>
-          </Container>
-        </Menu>
-      </Sticky>
+          <Menu.Item name="icon menu" position="right">
+            <Button circular icon style={styles.button}>
+              <Icon name="add" />
+            </Button>
+            <Button circular icon style={styles.button}>
+              <Icon name="tasks" />
+              {notifications ? (
+                <Label color="red" circular floating size="tiny">
+                  {notifications}
+                </Label>
+              ) : null}
+            </Button>
+            <Button circular icon style={styles.button}>
+              <Icon name="user" />
+            </Button>
+          </Menu.Item>
+        </Container>
+      </Menu>
     );
   }
 }
