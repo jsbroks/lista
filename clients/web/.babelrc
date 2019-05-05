@@ -1,0 +1,12 @@
+{
+  "presets": ["es2015", "stage-1", "react"],
+  "plugins": [
+    "babel-plugin-styled-components",
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ]
+  ]
+}

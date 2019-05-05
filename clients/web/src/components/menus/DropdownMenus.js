@@ -39,9 +39,11 @@ class DropdownMenu extends Component {
   onProjectClick = () => {
     this.setState({ showProjects: !this.state.showProjects });
   };
+
   onFilterClick = () => {
     this.setState({ showFilters: !this.state.showFilters });
   };
+
   onLabelClick = () => {
     this.setState({ showLabels: !this.state.showLabels });
   };

@@ -8,6 +8,8 @@ import {
   Menu,
   Label
 } from "semantic-ui-react";
+import { inject, observer } from "mobx-react";
+import { If } from "./helpers";
 
 export const APPBAR_HEIGHT = 60;
 
@@ -21,14 +23,16 @@ const styles = {
   }
 };
 
+@inject("commonStore")
+@observer
 class AppBar extends Component {
   render() {
-    const { notifications } = this.props;
+    const { notifications, commonStore } = this.props;
     return (
       <Menu icon secondary attached="top" style={styles.menu}>
         <Container>
           <Menu.Item header>
-            <Header as="h2">Lista</Header>
+            <Header as="h2">{commonStore.name}</Header>
           </Menu.Item>
 
           <Menu.Item name="icon menu" position="right">
@@ -37,11 +41,11 @@ class AppBar extends Component {
             </Button>
             <Button circular icon style={styles.button}>
               <Icon name="tasks" />
-              {notifications ? (
+              <If condition={notifications}>
                 <Label color="red" circular floating size="tiny">
                   {notifications}
                 </Label>
-              ) : null}
+              </If>
             </Button>
             <Button circular icon style={styles.button}>
               <Icon name="user" />

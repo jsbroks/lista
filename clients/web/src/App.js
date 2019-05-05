@@ -101,7 +101,7 @@ const styles = {
 class App extends Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <AppBar />
         <Container>
           <Grid columns={2}>
@@ -125,7 +125,7 @@ class App extends Component {
             </Grid.Row>
           </Grid>
         </Container>
-      </div>
+      </React.Fragment>
     );
   }
 }

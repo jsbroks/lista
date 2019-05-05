@@ -1,9 +1,17 @@
 const {
-  addDecoratorsLegacy,
   override,
-  disableEsLint
+  disableEsLint,
+  addDecoratorsLegacy,
+  addBabelPlugins,
+  fixBabelImports
 } = require("customize-cra");
 
-module.exports = {
-  webpack: override(addDecoratorsLegacy(), disableEsLint())
-};
+module.exports = override(
+  disableEsLint(),
+  addDecoratorsLegacy(),
+  ...addBabelPlugins("babel-plugin-styled-components"),
+  fixBabelImports("react-app-rewire-mobx", {
+    libraryDirectory: "",
+    camel2DashComponentName: false
+  })
+);

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import TextareaAutosize from "react-autosize-textarea";
 
 import { Label, List, Progress } from "semantic-ui-react";
+import TaskComments from "./TaskComments";
+import { If, Show } from "./helpers";
 
 const styles = {
   projectIcon: {
@@ -74,8 +76,8 @@ class Task extends Component {
     this.setState({ editText: false });
   };
 
-  hoverStyle = () => {
-    return this.state.hovering ? { opacity: 1 } : { opacity: 0.6 };
+  hoverStyle = (on = 1, off = 0.5) => {
+    return this.state.hovering ? { opacity: on } : { opacity: off };
   };
 
   render() {
@@ -83,6 +85,7 @@ class Task extends Component {
     const { showChildren, hovering, editText } = this.state;
 
     const hasChildren = children && children.length > 0;
+
     const progressDisabled = progress == null;
     const progressValue = !progressDisabled ? progress : 100;
 
@@ -92,46 +95,56 @@ class Task extends Component {
         onMouseOut={this.onMouseLeave}
         style={styles.task}
       >
-        {editText ? (
-          <List.Content>
-            <TextareaAutosize
-              innerRef={ref => (this.textarea = ref)}
-              style={styles.taskInput}
-              autoFocus
-              onBlur={this.disableNameEditing}
-              value={name}
-            />
-          </List.Content>
-        ) : (
-          <List.Content>
-            <List.Content floated="right" style={this.hoverStyle()}>
-              <List.Icon name="calendar" />
-              <List.Icon name="ellipsis vertical" />
-            </List.Content>
-
-            {project && !isChild ? <ProjectIcon project={project} /> : null}
-            <List.Content as="div">
-              {hasChildren ? (
-                <List.Icon
-                  style={this.hoverStyle()}
-                  name={`triangle ${showChildren ? "down" : "right"}`}
-                  onClick={this.toggleShowChildren}
-                />
-              ) : null}
-              <List.Icon
-                name={`${hovering ? "check " : ""}circle outline`}
-                style={this.hoverStyle()}
+        <If
+          condition={editText}
+          isTrue={
+            <List.Content>
+              <TextareaAutosize
+                innerRef={ref => (this.textarea = ref)}
+                style={styles.taskInput}
+                autoFocus
+                onBlur={this.disableNameEditing}
+                value={name}
               />
-
-              <List.Header
-                style={styles.taskText}
-                onClick={this.enableNameEditing}
-              >
-                {name}
-              </List.Header>
             </List.Content>
-          </List.Content>
-        )}
+          }
+          isFalse={
+            <List.Content>
+              <List.Content floated="right" style={this.hoverStyle()}>
+                <List.Icon name="calendar outline" />
+                <List.Icon name="ellipsis vertical" />
+              </List.Content>
+
+              <If condition={project && !isChild}>
+                <ProjectIcon project={project} />
+              </If>
+
+              <List.Content>
+                <If condition={hasChildren}>
+                  <List.Icon
+                    style={this.hoverStyle()}
+                    name={`triangle ${showChildren ? "down" : "right"}`}
+                    onClick={this.toggleShowChildren}
+                  />
+                </If>
+
+                <List.Icon
+                  name={`${hovering ? "check " : ""}circle outline`}
+                  style={this.hoverStyle()}
+                />
+
+                <List.Header
+                  style={styles.taskText}
+                  onClick={this.enableNameEditing}
+                >
+                  {name}
+                </List.Header>
+
+                <TaskComments iconStyle={this.hoverStyle()} />
+              </List.Content>
+            </List.Content>
+          }
+        />
 
         <Progress
           attached="bottom"
@@ -140,19 +153,29 @@ class Task extends Component {
           indicating={(hovering || editText) && !progressDisabled}
         />
 
-        {hasChildren ? (
-          <List.List
-            as="div"
-            style={{
-              ...styles.subList,
-              display: showChildren ? "block" : "none"
-            }}
-          >
-            {children.map(task => (
-              <Task key={task.id} {...task} isChild={true} />
-            ))}
-          </List.List>
-        ) : null}
+        <If condition={hasChildren}>
+          <Show condition={showChildren}>
+            <List.List as="div" style={styles.subList}>
+              {(children || []).map(task => (
+                <Task key={task.id} {...task} isChild={true} />
+              ))}
+            </List.List>
+          </Show>
+        </If>
+        {/* {hasChildren ? (
+          <Show condition={showChildren}>
+            <List.List
+              as="div"
+              style={{
+                ...styles.subList
+              }}
+            >
+              {children.map(task => (
+                <Task key={task.id} {...task} isChild={true} />
+              ))}
+            </List.List>
+          </Show>
+        ) : null} */}
       </List.Item>
     );
   }
