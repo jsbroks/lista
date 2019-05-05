@@ -1,13 +1,16 @@
-import { observable, computed, action } from "mobx";
+import { observable, computed, action, flow } from "mobx";
 import User from "../models/User";
+import { snakeToCamel } from "../utilities/requests";
+
+import axios from "axios";
 
 class UserStore {
   @observable loadingUser = true;
   @observable updatingUser = false;
-  @observable user = null;
+  @observable currentUser = null;
 
   constructor() {
-    this.user = new User(this, { firstName: "test1", lastName: "test2" });
+    this.getUser();
   }
 
   @computed get displayName() {
@@ -16,6 +19,15 @@ class UserStore {
 
   @computed get isAuthenticated() {
     return this.user != null;
+  }
+
+  @action
+  setUser(user) {
+    if (user instanceof User) {
+      this.user = user;
+    } else {
+      this.user = new User(snakeToCamel(user));
+    }
   }
 
   @action
@@ -32,6 +44,17 @@ class UserStore {
     }
     return false;
   };
+
+  getUser = flow(function*() {
+    this.loadingUser = true;
+
+    try {
+      const data = (yield axios.get("/api/v1/users/me")).data;
+      this.setUser(data);
+    } finally {
+      this.loadingUser = false;
+    }
+  });
 }
 
 export default new UserStore();

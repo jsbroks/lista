@@ -7,7 +7,7 @@ import {
   Button,
   Dimmer,
   Loader,
-  Segment
+  Segment,
 } from "semantic-ui-react";
 
 import { If } from "../components/helpers";
@@ -54,7 +54,7 @@ export class TaskComments extends Component {
               avatarUrl="https://react.semantic-ui.com/images/avatar/small/matt.jpg"
               displayName="Matt"
               date="Today at 5:42PM"
-              text="Wow comments!"
+              text="As collected deficient objection by it discovery sincerity curiosity. Quiet decay who round three world whole has mrs man. Built the china there tried jokes which gay why. Assure in adieus wicket it is. But spoke round point and one joy. Offending her moonlight men sweetness see unwilling. Often of it tears whole oh balls share an. "
             />
           </Comment.Group>
           <Form
@@ -62,7 +62,7 @@ export class TaskComments extends Component {
               this.replyForm = el;
             }}
           >
-            <Form.TextArea placeholder="Message" fluid />
+            <Form.TextArea placeholder="Message" />
             <Button content="Reply" icon="edit" primary fluid />
           </Form>
         </Modal.Content>

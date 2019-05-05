@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import { Container, Grid, List } from "semantic-ui-react";
 
 import AppBar, { APPBAR_HEIGHT } from "./components/AppBar";
+import { Switch, Route, withRouter } from "react-router-dom";
+
 import Task from "./components/Task";
 import ViewMenu from "./components/menus/ViewMenus";
 import DropdownMenu from "./components/menus/DropdownMenus";
@@ -17,15 +19,15 @@ const tasks = [
         id: 2,
         name: "subtask1",
         project: "project2",
-        progress: 20
+        progress: 20,
       },
       {
         id: 3,
         name: "subtask2",
         project: "project3",
-        progress: 100
-      }
-    ]
+        progress: 100,
+      },
+    ],
   },
   {
     id: 5,
@@ -42,18 +44,18 @@ const tasks = [
             id: 7,
             name: "subsubtask1",
             project: "project3",
-            progress: 20
-          }
-        ]
-      }
-    ]
-  }
+            progress: 20,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 const projects = [
   { id: 1, color: "red", name: "project1 test" },
   { id: 2, color: "green", name: "project2 test" },
-  { id: 3, color: "black", name: "project3 test" }
+  { id: 3, color: "black", name: "project3 test" },
 ];
 
 const labels = [
@@ -77,7 +79,7 @@ const labels = [
   { id: 18, name: "Label 4" },
   { id: 19, name: "Label 4" },
   { id: 20, name: "Label 4" },
-  { id: 21, name: "Label 4" }
+  { id: 21, name: "Label 4" },
 ];
 
 const filters = [
@@ -86,7 +88,7 @@ const filters = [
   { id: 3, name: "Query 3", query: "" },
   { id: 4, name: "Query 4", query: "" },
   { id: 5, name: "Query 4", query: "" },
-  { id: 6, name: "Query 4", query: "" }
+  { id: 6, name: "Query 4", query: "" },
 ];
 
 const styles = {
@@ -94,38 +96,52 @@ const styles = {
     paddingTop: 20,
     paddingBottom: 20,
     height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
-    overflowY: "auto"
-  }
+    overflowY: "auto",
+  },
 };
 
+// class App extends Component {
+//   render() {
+//     return (
+//       <React.Fragment>
+//         <AppBar />
+//         <Container>
+//           <Grid columns={2}>
+//             <Grid.Row style={{ padding: 0, marginTop: 14 }}>
+//               <Grid.Column width={4}>
+//                 <ViewMenu />
+//                 <DropdownMenu
+//                   projects={projects}
+//                   labels={labels}
+//                   filters={filters}
+//                 />
+//               </Grid.Column>
+
+//               <Grid.Column width={12}>
+//                 <List style={styles.taskView}>
+//                   {tasks.map(t => (
+//                     <Task key={t.id} {...t} />
+//                   ))}
+//                 </List>
+//               </Grid.Column>
+//             </Grid.Row>
+//           </Grid>
+//         </Container>
+//       </React.Fragment>
+//     );
+//   }
+// }
+
+@withRouter
 class App extends Component {
   render() {
     return (
-      <React.Fragment>
+      <div>
         <AppBar />
-        <Container>
-          <Grid columns={2}>
-            <Grid.Row style={{ padding: 0, marginTop: 14 }}>
-              <Grid.Column width={4}>
-                <ViewMenu />
-                <DropdownMenu
-                  projects={projects}
-                  labels={labels}
-                  filters={filters}
-                />
-              </Grid.Column>
-
-              <Grid.Column width={12}>
-                <List style={styles.taskView}>
-                  {tasks.map(t => (
-                    <Task key={t.id} {...t} />
-                  ))}
-                </List>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Container>
-      </React.Fragment>
+        <Switch>
+          <Route path="/" />
+        </Switch>
+      </div>
     );
   }
 }

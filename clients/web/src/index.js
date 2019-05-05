@@ -1,27 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
-import "./index.css";
 
 import { configure } from "mobx";
 import { Provider } from "mobx-react";
+import { HashRouter } from "react-router-dom";
 
-import todoStore from "./stores/todoStore";
-import commonStore from "./stores/commonStore";
-import userStore from "./stores/userStore";
+import App from "./App";
+import stores from "./stores";
 
-const stores = { todoStore, commonStore, userStore };
+import "./index.css";
 
 // For easier debugging
 window.APP_STATE = stores;
 
 configure({
-  enforceActions: "always"
+  enforceActions: "always",
 });
 
 ReactDOM.render(
   <Provider {...stores}>
-    <App />
+    <HashRouter>
+      <App />
+    </HashRouter>
   </Provider>,
   document.getElementById("root")
 );
