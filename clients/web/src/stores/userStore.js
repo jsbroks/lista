@@ -7,7 +7,7 @@ import axios from "axios";
 class UserStore {
   @observable loadingUser = true;
   @observable updatingUser = false;
-  @observable currentUser = null;
+  @observable user = null;
 
   constructor() {
     this.getUser();

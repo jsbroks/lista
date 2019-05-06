@@ -1,7 +1,4 @@
 import { observable, computed, action, flow } from "mobx";
-
-import { snakeToCamel } from "../utilities/requests";
-
 import axios from "axios";
 
 function getInfo() {
@@ -13,7 +10,7 @@ class CommonStore {
   @observable version = "";
   @observable loading = true;
   @observable totalUsers = 1;
-  @observable allowRegistration = false;
+  @observable allowRegistration = true;
 
   constructor() {
     this.loadInfo();
@@ -29,8 +26,9 @@ class CommonStore {
     try {
       const data = (yield getInfo()).data;
 
-      this.version = data.version.trim();
-      this.name = data.response;
+      this.version = data.version;
+      this.name = data.name;
+
       this.totalUsers = data.total_users;
     } catch (error) {
       console.log(error);
