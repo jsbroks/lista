@@ -2,7 +2,7 @@ import { observable, computed, action, flow } from "mobx";
 import User from "../models/User";
 import { snakeToCamel } from "../utilities/requests";
 
-import axios from "axios";
+import Users from "../utilities/endpoints/users";
 
 class UserStore {
   @observable loadingUser = true;
@@ -34,6 +34,7 @@ class UserStore {
   login = (username, password) => {
     this.loadingUser = true;
 
+    this.loadingUser = false;
     return false;
   };
 
@@ -49,8 +50,7 @@ class UserStore {
     this.loadingUser = true;
 
     try {
-      const data = (yield axios.get("/api/v1/users/me")).data;
-      this.setUser(data);
+      this.setUser((yield Users.me()).data);
     } finally {
       this.loadingUser = false;
     }

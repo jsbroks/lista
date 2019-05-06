@@ -19,7 +19,7 @@ const LabelItem = props => {
         size: "small",
         name: "tag",
         style: { padding: 6 },
-        color: "gray"
+        color: "grey"
       }}
     />
   );

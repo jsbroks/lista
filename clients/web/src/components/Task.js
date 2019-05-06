@@ -55,12 +55,16 @@ class Task extends Component {
 
   onMouseEnter = e => {
     e.stopPropagation();
-    this.setState({ hovering: true });
+    this.setHover(true);
   };
 
   onMouseLeave = e => {
     e.stopPropagation();
-    this.setState({ hovering: false });
+    this.setHover(false);
+  };
+
+  setHover = state => {
+    this.setState({ hovering: state });
   };
 
   toggleShowChildren = e => {
@@ -140,7 +144,10 @@ class Task extends Component {
                   {name}
                 </List.Header>
 
-                <TaskComments iconStyle={this.hoverStyle()} />
+                <TaskComments
+                  iconStyle={this.hoverStyle()}
+                  setHover={this.setHover}
+                />
               </List.Content>
             </List.Content>
           }
@@ -162,20 +169,6 @@ class Task extends Component {
             </List.List>
           </Show>
         </If>
-        {/* {hasChildren ? (
-          <Show condition={showChildren}>
-            <List.List
-              as="div"
-              style={{
-                ...styles.subList
-              }}
-            >
-              {children.map(task => (
-                <Task key={task.id} {...task} isChild={true} />
-              ))}
-            </List.List>
-          </Show>
-        ) : null} */}
       </List.Item>
     );
   }

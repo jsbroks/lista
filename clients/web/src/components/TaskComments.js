@@ -7,7 +7,7 @@ import {
   Button,
   Dimmer,
   Loader,
-  Segment,
+  Segment
 } from "semantic-ui-react";
 
 import { If } from "../components/helpers";
@@ -33,7 +33,7 @@ export class TaskComments extends Component {
   };
 
   render() {
-    const { iconStyle, task } = this.props;
+    const { iconStyle } = this.props;
 
     return (
       <Modal

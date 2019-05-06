@@ -103,7 +103,7 @@ class TasksView extends Component {
   render() {
     return (
       <Container>
-        <Grid columns={2}>
+        <Grid columns={2} stackable>
           <Grid.Row style={{ padding: 0, marginTop: 14 }}>
             <Grid.Column width={4}>
               <ViewMenu />
