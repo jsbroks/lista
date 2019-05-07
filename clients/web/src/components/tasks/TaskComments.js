@@ -5,12 +5,11 @@ import {
   Comment,
   Form,
   Button,
-  Dimmer,
-  Loader,
-  Segment
+  Segment,
+  Placeholder
 } from "semantic-ui-react";
 
-import { If } from "../components/helpers";
+import { If } from "../helpers";
 
 const TaskComment = ({ avatarUrl, date, text, displayName }) => {
   return (
@@ -33,21 +32,34 @@ export class TaskComments extends Component {
   };
 
   render() {
-    const { iconStyle } = this.props;
-
+    const { iconStyle, inverted } = this.props;
     return (
       <Modal
         trigger={
           <Icon
             name="comment outline"
             style={{ paddingLeft: 5, ...iconStyle }}
+            inverted={inverted}
           />
         }
       >
         <Modal.Header>Task Comments</Modal.Header>
         <Modal.Content scrolling>
           <If condition={true}>
-            <Segment basic loading style={{ padding: 30 }} />
+            <Segment basic loading style={{ padding: 30 }}>
+              <Placeholder>
+                <Placeholder.Header image>
+                  <Placeholder.Line />
+                  <Placeholder.Line />
+                </Placeholder.Header>
+              </Placeholder>
+              <Placeholder>
+                <Placeholder.Header image>
+                  <Placeholder.Line />
+                  <Placeholder.Line />
+                </Placeholder.Header>
+              </Placeholder>
+            </Segment>
           </If>
           <Comment.Group>
             <TaskComment

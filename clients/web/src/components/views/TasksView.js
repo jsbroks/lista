@@ -1,55 +1,9 @@
 import React, { Component } from "react";
+import { Container, Grid, Segment } from "semantic-ui-react";
 
-import { APPBAR_HEIGHT } from "../AppBar";
-
-import { Container, Grid, List } from "semantic-ui-react";
-
-import Task from "../Task";
 import ViewMenu from "../menus/ViewMenus";
 import DropdownMenu from "../menus/DropdownMenus";
-
-const tasks = [
-  {
-    id: 1,
-    name: "task1",
-    project: "project1",
-    children: [
-      {
-        id: 2,
-        name: "subtask1",
-        project: "project2",
-        progress: 20
-      },
-      {
-        id: 3,
-        name: "subtask2",
-        project: "project3",
-        progress: 100
-      }
-    ]
-  },
-  {
-    id: 5,
-    name: "task2",
-    project: "project1",
-    children: [
-      {
-        id: 6,
-        name: "subtask1",
-        project: "project2",
-        progress: 90,
-        children: [
-          {
-            id: 7,
-            name: "subsubtask1",
-            project: "project3",
-            progress: 20
-          }
-        ]
-      }
-    ]
-  }
-];
+import TasksList from "../tasks/TasksList";
 
 const projects = [
   { id: 1, color: "red", name: "project1 test" },
@@ -90,20 +44,11 @@ const filters = [
   { id: 6, name: "Query 4", query: "" }
 ];
 
-const styles = {
-  taskView: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
-    overflowY: "auto"
-  }
-};
-
 class TasksView extends Component {
   render() {
     return (
       <Container>
-        <Grid columns={2} stackable>
+        <Grid inverted stackable>
           <Grid.Row style={{ padding: 0, marginTop: 14 }}>
             <Grid.Column width={4}>
               <ViewMenu />
@@ -115,11 +60,7 @@ class TasksView extends Component {
             </Grid.Column>
 
             <Grid.Column width={12}>
-              <List style={styles.taskView}>
-                {tasks.map(t => (
-                  <Task key={t.id} {...t} />
-                ))}
-              </List>
+              <TasksList />
             </Grid.Column>
           </Grid.Row>
         </Grid>

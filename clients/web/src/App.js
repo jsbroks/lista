@@ -52,10 +52,18 @@ class PrivateRoute extends Component {
 }
 
 @withRouter
+@inject("commonStore")
+@observer
 class App extends Component {
   render() {
+    const { commonStore } = this.props;
+    const inverted = commonStore.inverted;
+    const style = {
+      background: inverted ? "#1B1C1D" : "white",
+      height: "100vh"
+    };
     return (
-      <div>
+      <div style={style}>
         <AppBar />
         <Switch>
           <PrivateRoute exact path="/" component={TasksView} />

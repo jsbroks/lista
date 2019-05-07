@@ -7,6 +7,7 @@ class CommonStore {
   @observable loading = true;
   @observable totalUsers = 1;
   @observable allowRegistration = true;
+  @observable inverted = false;
 
   constructor() {
     this.loadInfo();
@@ -19,6 +20,10 @@ class CommonStore {
   @computed get requiresSetup() {
     return this.totalUsers === 0;
   }
+
+  @action toggleInverted = () => {
+    this.inverted = !this.inverted;
+  };
 
   loadInfo = flow(function*() {
     this.loading = true;

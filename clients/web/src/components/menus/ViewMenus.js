@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 
 import { Menu, Icon, Label } from "semantic-ui-react";
+import { inject, observer } from "mobx-react";
 
+@inject("commonStore")
+@observer
 class ViewMenu extends Component {
   constructor(props) {
     super(props);
@@ -23,9 +26,18 @@ class ViewMenu extends Component {
   }
   render() {
     const { isDayTime } = this.state;
-
+    const { commonStore } = this.props;
+    const inverted = commonStore.inverted;
     return (
-      <Menu vertical secondary fluid pointing size="large">
+      <Menu
+        inverted={inverted}
+        secondary={!inverted}
+        borderless
+        vertical
+        fluid
+        size="large"
+        style={{ marginTop: 10 }}
+      >
         <Menu.Item active={true}>
           <Icon name="inbox" />
           Inbox

@@ -13,6 +13,7 @@ import {
   Image,
   Popup
 } from "semantic-ui-react";
+import { NONAME } from "dns";
 
 export const APPBAR_HEIGHT = 60;
 
@@ -21,7 +22,6 @@ const styles = {
     marginRight: 5
   },
   menu: {
-    background: "white",
     height: APPBAR_HEIGHT
   }
 };
@@ -31,18 +31,23 @@ const styles = {
 class AppBar extends Component {
   render() {
     const { notifications, commonStore, userStore } = this.props;
+
+    const inverted = commonStore.inverted;
+
     return (
-      <Menu icon secondary attached="top" style={styles.menu}>
+      <Menu inverted={inverted} attached="top" className="borderless">
         <Container>
-          <Menu.Item header>
-            <Header as="h2">{commonStore.name}</Header>
+          <Menu.Item header style={styles.removeOutline}>
+            <Header as="h2" inverted={inverted}>
+              {commonStore.name}
+            </Header>
           </Menu.Item>
           {userStore.isAuthenticated ? (
             <Menu.Item name="icon menu" position="right">
-              <Button circular icon style={styles.button}>
+              <Button circular icon style={styles.button} inverted={inverted}>
                 <Icon name="add" />
               </Button>
-              <Button circular icon style={styles.button}>
+              <Button circular icon style={styles.button} inverted={inverted}>
                 <Icon name="tasks" />
                 <If condition={notifications}>
                   <Label color="red" circular floating size="tiny">
@@ -53,7 +58,12 @@ class AppBar extends Component {
 
               <Popup
                 trigger={
-                  <Button style={styles.button} icon circular>
+                  <Button
+                    style={styles.button}
+                    icon
+                    circular
+                    inverted={inverted}
+                  >
                     <Icon name="user" />
                   </Button>
                 }
@@ -61,6 +71,7 @@ class AppBar extends Component {
                 hideOnScroll
                 flowing
                 hoverable
+                inverted={inverted}
               >
                 <Popup.Header>
                   <Image src={userStore.user.avatar} avatar />
@@ -77,12 +88,22 @@ class AppBar extends Component {
                     fluid
                     basic
                     style={{ border: 0 }}
+                    inverted={inverted}
                   >
                     <Button icon="settings" content="Settings" />
                     <Button icon="sign-out" content="Logout" />
                   </Button.Group>
                 </Popup.Content>
               </Popup>
+              <Button
+                circular
+                icon
+                style={styles.button}
+                inverted={inverted}
+                onClick={commonStore.toggleInverted}
+              >
+                <Icon name={inverted ? "moon" : "sun"} />
+              </Button>
             </Menu.Item>
           ) : null}
         </Container>

@@ -4,6 +4,7 @@ import { Accordion, Icon, List, Button } from "semantic-ui-react";
 
 import MenuItem from "./MenuItem";
 import ProjectItem from "./ProjectItem";
+import { inject, observer } from "mobx-react";
 
 const styles = {
   removePadding: {
@@ -25,6 +26,8 @@ const LabelItem = props => {
   );
 };
 
+@inject("commonStore")
+@observer
 class DropdownMenu extends Component {
   constructor(props) {
     super(props);
@@ -49,11 +52,13 @@ class DropdownMenu extends Component {
   };
 
   render() {
-    const { projects, labels } = this.props;
+    const { projects, labels, commonStore } = this.props;
     const { showProjects, showFilters, showLabels } = this.state;
 
+    const inverted = commonStore.inverted;
+
     return (
-      <Accordion fluid>
+      <Accordion fluid inverted={inverted}>
         <Accordion.Title active={showProjects} onClick={this.onProjectClick}>
           <Icon name="dropdown" />
           Projects
@@ -64,7 +69,13 @@ class DropdownMenu extends Component {
               <ProjectItem key={p.id} {...p} />
             ))}
             <List.Item>
-              <Button basic fluid size="mini" style={{ padding: 4 }}>
+              <Button
+                basic
+                fluid
+                size="mini"
+                style={{ padding: 4 }}
+                inverted={inverted}
+              >
                 New project
               </Button>
             </List.Item>
@@ -81,7 +92,13 @@ class DropdownMenu extends Component {
               <LabelItem key={l.id} {...l} />
             ))}
             <List.Item>
-              <Button basic fluid size="mini" style={{ padding: 4 }}>
+              <Button
+                basic
+                fluid
+                size="mini"
+                style={{ padding: 4 }}
+                inverted={inverted}
+              >
                 New label
               </Button>
             </List.Item>
@@ -95,7 +112,13 @@ class DropdownMenu extends Component {
         <Accordion.Content active={showFilters} style={styles.removePadding}>
           <List selection>
             <List.Item>
-              <Button basic fluid size="mini" style={{ padding: 4 }}>
+              <Button
+                basic
+                fluid
+                size="mini"
+                style={{ padding: 4 }}
+                inverted={inverted}
+              >
                 New filter
               </Button>
             </List.Item>

@@ -25,7 +25,9 @@ app.all("/*", (req, res) => {
 
   try {
     const data = fs.readFileSync(file);
-    res.send(JSON.parse(data));
+    setTimeout(() => {
+      res.send(JSON.parse(data));
+    }, 1000);
   } catch (err) {
     res.status(400);
     res.send({ message: "error occured" });

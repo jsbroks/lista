@@ -4,7 +4,7 @@ import TextareaAutosize from "react-autosize-textarea";
 
 import { Label, List, Progress } from "semantic-ui-react";
 import TaskComments from "./TaskComments";
-import { If, Show } from "./helpers";
+import { If, Show } from "../helpers";
 
 const styles = {
   projectIcon: {
@@ -26,9 +26,12 @@ const styles = {
 };
 
 const ProjectIcon = props => {
-  const { project } = props;
+  const { project, inverted } = props;
   return (
-    <List.Content floated="right">
+    <List.Content
+      floated="right"
+      style={{ color: inverted ? "lightgray" : "darkgray" }}
+    >
       <Label
         size="mini"
         color="red"
@@ -85,7 +88,7 @@ class Task extends Component {
   };
 
   render() {
-    const { name, project, children, progress, isChild } = this.props;
+    const { name, project, children, progress, isChild, inverted } = this.props;
     const { showChildren, hovering, editText } = this.state;
 
     const hasChildren = children && children.length > 0;
@@ -95,6 +98,7 @@ class Task extends Component {
 
     return (
       <List.Item
+        as="div"
         onMouseOver={this.onMouseEnter}
         onMouseOut={this.onMouseLeave}
         style={styles.task}
@@ -115,8 +119,8 @@ class Task extends Component {
           isFalse={
             <List.Content>
               <List.Content floated="right" style={this.hoverStyle()}>
-                <List.Icon name="calendar outline" />
-                <List.Icon name="ellipsis vertical" />
+                <List.Icon name="calendar outline" inverted={inverted} />
+                <List.Icon name="ellipsis vertical" inverted={inverted} />
               </List.Content>
 
               <If condition={project && !isChild}>
@@ -129,12 +133,14 @@ class Task extends Component {
                     style={this.hoverStyle()}
                     name={`triangle ${showChildren ? "down" : "right"}`}
                     onClick={this.toggleShowChildren}
+                    inverted={inverted}
                   />
                 </If>
 
                 <List.Icon
                   name={`${hovering ? "check " : ""}circle outline`}
                   style={this.hoverStyle()}
+                  inverted={inverted}
                 />
 
                 <List.Header
@@ -147,6 +153,7 @@ class Task extends Component {
                 <TaskComments
                   iconStyle={this.hoverStyle()}
                   setHover={this.setHover}
+                  inverted={inverted}
                 />
               </List.Content>
             </List.Content>
@@ -158,13 +165,19 @@ class Task extends Component {
           percent={progressValue}
           disabled={progressDisabled}
           indicating={(hovering || editText) && !progressDisabled}
+          inverted={inverted}
         />
 
         <If condition={hasChildren}>
           <Show condition={showChildren}>
             <List.List as="div" style={styles.subList}>
               {(children || []).map(task => (
-                <Task key={task.id} {...task} isChild={true} />
+                <Task
+                  key={task.id}
+                  {...task}
+                  isChild={true}
+                  inverted={inverted}
+                />
               ))}
             </List.List>
           </Show>
@@ -179,7 +192,8 @@ Task.protoTypes = {
   project: PropTypes.string,
   duration: PropTypes.number,
   percent: PropTypes.number,
-  isChild: PropTypes.bool
+  isChild: PropTypes.bool,
+  inverted: PropTypes.bool
 };
 
 export default Task;
