@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextareaAutosize from "react-autosize-textarea";
 
-import { Label, List, Progress } from "semantic-ui-react";
+import { Label, List, Progress, Ref } from "semantic-ui-react";
+import { DragSource } from "react-dnd";
+
 import TaskComments from "./TaskComments";
 import { If, Show } from "../helpers";
 
@@ -11,7 +13,12 @@ const styles = {
     marginRight: 5
   },
   subList: {
-    paddingLeft: 20
+    paddingTop: 4,
+    paddingLeft: 30
+  },
+  task: {
+    pading: 0,
+    margin: "0 0"
   },
   taskText: {
     display: "inline"
@@ -45,6 +52,24 @@ const ProjectIcon = props => {
   );
 };
 
+const spec = {
+  beginDrag({ item }) {
+    return item;
+  },
+  endDrag(props, monitor, component) {
+    return props.handleDrop(props.item.id);
+  }
+};
+
+const collection = (connect, monitor) => {
+  return {
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+  };
+};
+
+@DragSource("TASK", spec, collection)
 class Task extends Component {
   constructor(props) {
     super(props);
@@ -88,7 +113,15 @@ class Task extends Component {
   };
 
   render() {
-    const { name, project, children, progress, isChild, inverted } = this.props;
+    const {
+      name,
+      project,
+      children,
+      progress,
+      isChild,
+      inverted,
+      connectDragSource
+    } = this.props;
     const { showChildren, hovering, editText } = this.state;
 
     const hasChildren = children && children.length > 0;
@@ -97,92 +130,100 @@ class Task extends Component {
     const progressValue = !progressDisabled ? progress : 100;
 
     return (
-      <List.Item
-        as="div"
-        onMouseOver={this.onMouseEnter}
-        onMouseOut={this.onMouseLeave}
-        style={styles.task}
-      >
-        <If
-          condition={editText}
-          isTrue={
-            <List.Content>
-              <TextareaAutosize
-                innerRef={ref => (this.textarea = ref)}
-                style={styles.taskInput}
-                autoFocus
-                onBlur={this.disableNameEditing}
-                value={name}
-              />
-            </List.Content>
-          }
-          isFalse={
-            <List.Content>
-              <List.Content floated="right" style={this.hoverStyle()}>
-                <List.Icon name="calendar outline" inverted={inverted} />
-                <List.Icon name="ellipsis vertical" inverted={inverted} />
-              </List.Content>
+      <Ref innerRef={instance => connectDragSource(instance)}>
+        <List.Item
+          onMouseOver={this.onMouseEnter}
+          onMouseOut={this.onMouseLeave}
+          style={styles.task}
+        >
+          <List.Icon
+            className="dragHandle"
+            name="arrows alternate vertical"
+            style={{ ...this.hoverStyle(0.5, 0) }}
+            inverted={inverted}
+          />
+          <If condition={hasChildren}>
+            <List.Icon
+              style={this.hoverStyle()}
+              name={`angle ${showChildren ? "down" : "right"}`}
+              onClick={this.toggleShowChildren}
+              inverted={inverted}
+            />
+          </If>
+          <List.Content style={{ padding: 0 }}>
+            <If
+              condition={editText}
+              isTrue={
+                <List.Content>
+                  <TextareaAutosize
+                    innerRef={ref => (this.textarea = ref)}
+                    style={styles.taskInput}
+                    autoFocus
+                    onBlur={this.disableNameEditing}
+                    value={name}
+                  />
+                </List.Content>
+              }
+              isFalse={
+                <List.Content>
+                  <List.Content floated="right" style={this.hoverStyle()}>
+                    <List.Icon name="calendar outline" inverted={inverted} />
+                    <List.Icon name="ellipsis vertical" inverted={inverted} />
+                  </List.Content>
 
-              <If condition={project && !isChild}>
-                <ProjectIcon project={project} />
-              </If>
+                  <If condition={project && !isChild}>
+                    <ProjectIcon project={project} />
+                  </If>
 
-              <List.Content>
-                <If condition={hasChildren}>
-                  <List.Icon
-                    style={this.hoverStyle()}
-                    name={`triangle ${showChildren ? "down" : "right"}`}
-                    onClick={this.toggleShowChildren}
+                  <List.Content>
+                    <List.Icon
+                      name={`${hovering ? "check " : ""}circle outline`}
+                      style={this.hoverStyle()}
+                      inverted={inverted}
+                    />
+
+                    <List.Header
+                      style={styles.taskText}
+                      onClick={this.enableNameEditing}
+                    >
+                      {name}
+                    </List.Header>
+
+                    <TaskComments
+                      iconStyle={this.hoverStyle()}
+                      setHover={this.setHover}
+                      inverted={inverted}
+                    />
+                  </List.Content>
+                </List.Content>
+              }
+            />
+
+            <Progress
+              attached="bottom"
+              percent={progressValue}
+              disabled={progressDisabled}
+              indicating={(hovering || editText) && !progressDisabled}
+              inverted={inverted}
+            />
+          </List.Content>
+
+          <If condition={hasChildren}>
+            <Show condition={showChildren}>
+              <List.List as="div" style={styles.subList}>
+                {(children || []).map(task => (
+                  <Task
+                    key={task.id}
+                    {...task}
+                    isChild={true}
                     inverted={inverted}
                   />
-                </If>
-
-                <List.Icon
-                  name={`${hovering ? "check " : ""}circle outline`}
-                  style={this.hoverStyle()}
-                  inverted={inverted}
-                />
-
-                <List.Header
-                  style={styles.taskText}
-                  onClick={this.enableNameEditing}
-                >
-                  {name}
-                </List.Header>
-
-                <TaskComments
-                  iconStyle={this.hoverStyle()}
-                  setHover={this.setHover}
-                  inverted={inverted}
-                />
-              </List.Content>
-            </List.Content>
-          }
-        />
-
-        <Progress
-          attached="bottom"
-          percent={progressValue}
-          disabled={progressDisabled}
-          indicating={(hovering || editText) && !progressDisabled}
-          inverted={inverted}
-        />
-
-        <If condition={hasChildren}>
-          <Show condition={showChildren}>
-            <List.List as="div" style={styles.subList}>
-              {(children || []).map(task => (
-                <Task
-                  key={task.id}
-                  {...task}
-                  isChild={true}
-                  inverted={inverted}
-                />
-              ))}
-            </List.List>
-          </Show>
-        </If>
-      </List.Item>
+                ))}
+              </List.List>
+            </Show>
+          </If>
+        </List.Item>
+      </Ref>
     );
   }
 }

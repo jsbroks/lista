@@ -7,6 +7,9 @@ import TasksView from "./components/views/TasksView";
 import LoginView from "./components/views/LoginView";
 import { inject, observer } from "mobx-react";
 
+import TouchBackend from "react-dnd-touch-backend";
+import { DragDropContextProvider } from "react-dnd";
+
 import { If } from "./components/helpers";
 
 const ConditionRoute = ({ condition, to, ...rest }) => {
@@ -57,20 +60,24 @@ class PrivateRoute extends Component {
 class App extends Component {
   render() {
     const { commonStore } = this.props;
+
     const inverted = commonStore.inverted;
     const style = {
       background: inverted ? "#1B1C1D" : "white",
       height: "100vh"
     };
+
     return (
-      <div style={style}>
-        <AppBar />
-        <Switch>
-          <PrivateRoute exact path="/" component={TasksView} />
-          <Redirect from="/tasks" to="/" />
-          <LoginRoute path="/login" component={LoginView} />
-        </Switch>
-      </div>
+      <DragDropContextProvider backend={TouchBackend}>
+        <div style={style}>
+          <AppBar />
+          <Switch>
+            <PrivateRoute exact path="/" component={TasksView} />
+            <Redirect from="/tasks" to="/" />
+            <LoginRoute path="/login" component={LoginView} />
+          </Switch>
+        </div>
+      </DragDropContextProvider>
     );
   }
 }

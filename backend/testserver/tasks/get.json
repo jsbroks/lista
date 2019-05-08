@@ -11,7 +11,17 @@
       "project_id": 1,
       "priority": 5,
       "due_date": null,
-      "progress": null
+      "progress": null,
+      "children": [
+        {
+          "id": 22,
+          "name": "Test 2",
+          "project_id": 1,
+          "priority": 5,
+          "due_date": null,
+          "progress": null
+        }
+      ]
     },
     {
       "id": 2,

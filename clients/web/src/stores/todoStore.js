@@ -6,7 +6,6 @@ class TodoStore {
   @observable loadingTasks = false;
 
   @observable tasks = [];
-  @observable tasksMap = new Map();
 
   @observable filter = "";
 
@@ -14,27 +13,16 @@ class TodoStore {
     this.getTasks();
   }
 
-  getTasks = flow(function*(filter) {
+  getTasks = flow(function*() {
     this.loadingTasks = true;
 
     try {
       const data = (yield Tasks.get()).data;
       this.tasks = data.tasks;
-
-      this.mapTasks(this.tasks);
     } finally {
       this.loadingTasks = false;
     }
   });
-
-  mapTasks(tasks) {
-    if (!tasks) return;
-
-    for (let task of tasks) {
-      this.tasksMap.set(task.id, task);
-      this.mapTasks(tasks.subtasks);
-    }
-  }
 
   @computed get isFilterEmpty() {
     return this.tasks.length === 0;

@@ -6,8 +6,7 @@ import {
   Header,
   Icon,
   Loader,
-  Placeholder,
-  Dimmer
+  Placeholder
 } from "semantic-ui-react";
 import { APPBAR_HEIGHT } from "../AppBar";
 import { inject, observer } from "mobx-react";
@@ -60,7 +59,7 @@ class TasksList extends Component {
               </Segment>
             }
             isFalse={
-              <List style={styles.taskView} inverted={inverted}>
+              <List style={styles.taskView} inverted={inverted} size="large">
                 {todoStore.tasks.map(t => (
                   <Task key={t.id} {...t} inverted={inverted} />
                 ))}
