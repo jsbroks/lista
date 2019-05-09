@@ -8,68 +8,42 @@
     {
       "id": 1,
       "name": "Test 1",
+      "parentId": 0,
       "project_id": 1,
       "priority": 5,
       "due_date": null,
       "progress": null,
-      "children": [
-        {
-          "id": 22,
-          "name": "Test 2",
-          "project_id": 1,
-          "priority": 5,
-          "due_date": null,
-          "progress": null
-        }
-      ]
+      "index": 0
     },
     {
       "id": 2,
       "name": "Test 2",
       "project_id": 1,
+      "parentId": 1,
       "priority": 5,
       "due_date": null,
-      "progress": null
+      "progress": null,
+      "index": 0
     },
     {
       "id": 3,
-      "name": "Test 3",
-      "project_id": 1,
+      "name": "Test 2",
+      "project_id": 2,
+      "parentId": 1,
       "priority": 5,
       "due_date": null,
-      "progress": null
+      "progress": null,
+      "index": 0
     },
     {
       "id": 4,
-      "name": "Test 4",
-      "project_id": 1,
+      "name": "Test 2",
+      "project_id": 2,
+      "parentId": 0,
       "priority": 5,
       "due_date": null,
-      "progress": null
-    },
-    {
-      "id": 5,
-      "name": "Test 5",
-      "project_id": 1,
-      "priority": 5,
-      "due_date": null,
-      "progress": null
-    },
-    {
-      "id": 6,
-      "name": "Test 6",
-      "project_id": 1,
-      "priority": 5,
-      "due_date": null,
-      "progress": null
-    },
-    {
-      "id": 7,
-      "name": "Test 7",
-      "project_id": 1,
-      "priority": 5,
-      "due_date": null,
-      "progress": null
+      "progress": null,
+      "index": 1
     }
   ]
 }

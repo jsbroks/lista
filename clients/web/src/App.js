@@ -7,7 +7,8 @@ import TasksView from "./components/views/TasksView";
 import LoginView from "./components/views/LoginView";
 import { inject, observer } from "mobx-react";
 
-import TouchBackend from "react-dnd-touch-backend";
+import HTML5Backend from "react-dnd-html5-backend";
+
 import { DragDropContextProvider } from "react-dnd";
 
 import { If } from "./components/helpers";
@@ -68,7 +69,7 @@ class App extends Component {
     };
 
     return (
-      <DragDropContextProvider backend={TouchBackend}>
+      <DragDropContextProvider backend={HTML5Backend}>
         <div style={style}>
           <AppBar />
           <Switch>

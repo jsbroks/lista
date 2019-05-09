@@ -69,7 +69,6 @@ const collection = (connect, monitor) => {
   };
 };
 
-@DragSource("TASK", spec, collection)
 class Task extends Component {
   constructor(props) {
     super(props);
@@ -130,7 +129,7 @@ class Task extends Component {
     const progressValue = !progressDisabled ? progress : 100;
 
     return (
-      <Ref innerRef={instance => connectDragSource(instance)}>
+      <Ref>
         <List.Item
           onMouseOver={this.onMouseEnter}
           onMouseOut={this.onMouseLeave}

@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { Container, Grid, Segment } from "semantic-ui-react";
+import { Container, Grid, List, Ref, Progress } from "semantic-ui-react";
 
+import { inject, observer } from "mobx-react";
 import ViewMenu from "../menus/ViewMenus";
 import DropdownMenu from "../menus/DropdownMenus";
 import TasksList from "../tasks/TasksList";
+
+import Sortly, { convert, add, insert, remove } from "react-sortly";
 
 const projects = [
   { id: 1, color: "red", name: "project1 test" },
@@ -44,8 +47,162 @@ const filters = [
   { id: 6, name: "Query 4", query: "" }
 ];
 
-class TasksView extends Component {
+const styles = { tasks: {} };
+
+class Task extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: this.props.name,
+      hovering: false,
+      showChildren: true,
+      editText: false
+    };
+  }
+
+  handleChangeName = e => {
+    this.setState({ name: e.target.value }, () => this.change());
+  };
+
+  handleClickRemove = () => {
+    const { index, onRemove } = this.props;
+    onRemove(index);
+  };
+
+  handleKeyDown = e => {
+    if (e.key === "Enter") {
+      const { index, onReturn } = this.props;
+      onReturn(index);
+    }
+  };
+
+  onMouseEnter = e => {
+    e.stopPropagation();
+    this.setHover(true);
+  };
+
+  onMouseLeave = e => {
+    e.stopPropagation();
+    this.setHover(false);
+  };
+
+  setHover = state => {
+    this.setState({ hovering: state });
+  };
+
+  toggleShowChildren = e => {
+    e.stopPropagation();
+    this.setState({ showChildren: !this.state.showChildren });
+  };
+
+  enableNameEditing = () => {
+    this.setState({ editText: true });
+  };
+
+  disableNameEditing = (save = true) => {
+    this.setState({ editText: false });
+  };
+
+  hoverStyle = (on = 1, off = 0.5) => {
+    return this.state.hovering ? { opacity: on } : { opacity: off };
+  };
+
   render() {
+    const {
+      connectDragSource,
+      connectDragPreview,
+      connectDropTarget,
+      isDragging,
+      isClosestDragging,
+      active,
+      path,
+      progress,
+      name
+    } = this.props;
+
+    const progressDisabled = progress == null;
+    const progressValue = !progressDisabled ? progress : 100;
+
+    const inverted = false;
+    const dragHandle = (
+      <Ref innerRef={instance => connectDragSource(instance)}>
+        <List.Icon
+          className="dragHandle"
+          name="arrows alternate vertical"
+          color={isDragging ? "red" : null}
+          style={{ ...this.hoverStyle(0.5, 0), cursor: "move" }}
+          inverted={inverted}
+        />
+      </Ref>
+    );
+
+    return (
+      <Ref
+        innerRef={instance => {
+          connectDropTarget(instance);
+          connectDragPreview(instance);
+        }}
+      >
+        <List.Item
+          onMouseOver={this.onMouseEnter}
+          onMouseOut={this.onMouseLeave}
+          style={{ ...styles.task, paddingLeft: path.length * 20 }}
+        >
+          <List.Content>
+            {dragHandle}
+
+            <List.Content style={{ display: "inline" }}>
+              <List.Header as="h5" style={{ display: "inline" }}>
+                {name}
+              </List.Header>
+              <div style={{ ...this.hoverStyle(), float: "right" }}>
+                <List.Icon name="calendar outline" inverted={inverted} />
+                <List.Icon name="ellipsis vertical" inverted={inverted} />
+              </div>
+            </List.Content>
+
+            <Progress
+              style={{ marginLeft: 20 }}
+              attached="bottom"
+              percent={100}
+              disabled={false}
+              inverted={inverted}
+              indicating={true}
+            />
+          </List.Content>
+        </List.Item>
+      </Ref>
+    );
+  }
+}
+
+const ITEMS = [
+  { id: 1, name: "Test1", path: [] },
+  { id: 2, name: "Test2", path: [] },
+  { id: 3, name: "test3", path: [2] },
+  { id: 4, name: "Test3", path: [2, 3] },
+  { id: 5, name: "Test3", path: [] }
+];
+
+@inject("todoStore", "commonStore")
+@observer
+class TasksView extends Component {
+  state = { items: ITEMS };
+
+  renderItem = props => <Task {...props} />;
+
+  handleChange = items => {
+    this.setState({ items });
+  };
+
+  render() {
+    // const { todoStore } = this.props;
+    // const { tasks } = todoStore;
+    // console.log(tasks);
+    // const items = convert(tasks);
+    // console.log(items);
+    const { items } = this.state;
     return (
       <Container>
         <Grid inverted stackable>
@@ -60,7 +217,13 @@ class TasksView extends Component {
             </Grid.Column>
 
             <Grid.Column width={12}>
-              <TasksList />
+              <List relaxed>
+                <Sortly
+                  items={items}
+                  itemRenderer={this.renderItem}
+                  onChange={this.handleChange}
+                />
+              </List>
             </Grid.Column>
           </Grid.Row>
         </Grid>
