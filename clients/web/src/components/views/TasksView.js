@@ -60,7 +60,7 @@ class TasksView extends Component {
             </Grid.Column>
 
             <Grid.Column width={12}>
-              <TasksList />
+              <TasksList days={2} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

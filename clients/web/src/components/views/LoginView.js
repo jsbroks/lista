@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-  Form,
-  Grid,
-  Segment,
-  Icon,
-  Message,
-  Header
-} from "semantic-ui-react";
+import { Button, Form, Grid, Segment, Icon, Message } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { If } from "../helpers";
 
@@ -50,6 +42,7 @@ class LoginView extends Component {
                   iconPosition="left"
                   placeholder="E-mail address"
                 />
+
                 <Form.Input
                   fluid
                   icon="lock"

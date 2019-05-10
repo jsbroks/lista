@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextareaAutosize from "react-autosize-textarea";
 
-import { Label, List, Progress, Ref } from "semantic-ui-react";
+import { Label, List, Progress, Ref, Item } from "semantic-ui-react";
+import ItemType from "../../ItemTypes";
 import { DragSource } from "react-dnd";
 
 import TaskComments from "./TaskComments";
@@ -53,8 +54,8 @@ const ProjectIcon = props => {
 };
 
 const spec = {
-  beginDrag({ item }) {
-    return item;
+  beginDrag({ id }) {
+    return { id };
   },
   endDrag(props, monitor, component) {
     return props.handleDrop(props.item.id);
@@ -69,7 +70,7 @@ const collection = (connect, monitor) => {
   };
 };
 
-@DragSource("TASK", spec, collection)
+@DragSource(ItemType.TASK, spec, collection)
 class Task extends Component {
   constructor(props) {
     super(props);
@@ -120,8 +121,11 @@ class Task extends Component {
       progress,
       isChild,
       inverted,
-      connectDragSource
+      connectDragSource,
+      connectDragPreview,
+      isDragging
     } = this.props;
+
     const { showChildren, hovering, editText } = this.state;
 
     const hasChildren = children && children.length > 0;
@@ -129,19 +133,22 @@ class Task extends Component {
     const progressDisabled = progress == null;
     const progressValue = !progressDisabled ? progress : 100;
 
+    const opacity = isDragging ? 0.1 : 1;
+
     return (
-      <Ref innerRef={instance => connectDragSource(instance)}>
+      <Ref innerRef={instance => connectDragPreview(instance)}>
         <List.Item
           onMouseOver={this.onMouseEnter}
           onMouseOut={this.onMouseLeave}
-          style={styles.task}
+          style={{ opacity }}
         >
-          <List.Icon
-            className="dragHandle"
-            name="arrows alternate vertical"
-            style={{ ...this.hoverStyle(0.5, 0) }}
-            inverted={inverted}
-          />
+          <Ref innerRef={instance => connectDragSource(instance)}>
+            <List.Icon
+              name="arrows alternate vertical"
+              style={{ ...this.hoverStyle(0.5, 0), cursor: "move" }}
+              inverted={inverted}
+            />
+          </Ref>
           <If condition={hasChildren}>
             <List.Icon
               style={this.hoverStyle()}
@@ -207,21 +214,6 @@ class Task extends Component {
               inverted={inverted}
             />
           </List.Content>
-
-          <If condition={hasChildren}>
-            <Show condition={showChildren}>
-              <List.List as="div" style={styles.subList}>
-                {(children || []).map(task => (
-                  <Task
-                    key={task.id}
-                    {...task}
-                    isChild={true}
-                    inverted={inverted}
-                  />
-                ))}
-              </List.List>
-            </Show>
-          </If>
         </List.Item>
       </Ref>
     );

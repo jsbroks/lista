@@ -14,7 +14,7 @@ import "./index.css";
 window.APP_STATE = stores;
 
 configure({
-  enforceActions: "always",
+  enforceActions: "always"
 });
 
 ReactDOM.render(

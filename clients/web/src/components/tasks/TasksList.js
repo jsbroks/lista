@@ -6,10 +6,13 @@ import {
   Header,
   Icon,
   Loader,
-  Placeholder
+  Placeholder,
+  Button
 } from "semantic-ui-react";
 import { APPBAR_HEIGHT } from "../AppBar";
 import { inject, observer } from "mobx-react";
+
+import moment from "moment";
 
 import Task from "./Task";
 import { If } from "../helpers";
@@ -23,11 +26,62 @@ const styles = {
   }
 };
 
+const Section = ({ name, inverted, tasks, isOverdue }) => {
+  console.log(isOverdue);
+  return (
+    <List key={name} inverted={inverted} size="large">
+      <If condition={name && name.length > 0}>
+        <List.Item>
+          <List.Header as="h3" style={isOverdue ? { color: "#c0392b" } : null}>
+            {name}
+          </List.Header>
+        </List.Item>
+      </If>
+
+      {tasks.map(t => (
+        <Task key={t.id} {...t} inverted={inverted} />
+      ))}
+
+      <List.Item style={{ paddingTop: 10 }}>
+        <Button compact fluid basic>
+          <Icon name="add" />
+          Add new task
+        </Button>
+      </List.Item>
+    </List>
+  );
+};
+
+const Sections = ({ days, tasks, inverted }) => {
+  let sections = ["Overdue", "Today", "Tomorrow"];
+
+  for (let i = 2; i < days; i++) {
+    sections.push(
+      moment()
+        .add(i, "day")
+        .format("dddd")
+    );
+  }
+
+  sections.length = days > 0 ? days + 1 : 0;
+  sections = days > 0 ? sections : [""];
+
+  return sections.map(s => (
+    <Section
+      key={s}
+      name={s}
+      tasks={tasks}
+      inverted={inverted}
+      isOverdue={s === sections[0]}
+    />
+  ));
+};
+
 @inject("todoStore", "commonStore")
 @observer
 class TasksList extends Component {
   render() {
-    const { todoStore, commonStore } = this.props;
+    const { todoStore, commonStore, days } = this.props;
     const inverted = commonStore.inverted;
 
     return (
@@ -59,11 +113,13 @@ class TasksList extends Component {
               </Segment>
             }
             isFalse={
-              <List style={styles.taskView} inverted={inverted} size="large">
-                {todoStore.tasks.map(t => (
-                  <Task key={t.id} {...t} inverted={inverted} />
-                ))}
-              </List>
+              <div style={styles.taskView}>
+                <Sections
+                  days={days}
+                  tasks={todoStore.tasks}
+                  inverted={inverted}
+                />
+              </div>
             }
           />
         }
